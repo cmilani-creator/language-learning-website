@@ -1,0 +1,44 @@
+services:
+  backend:
+    build:
+      context: ./backend
+      args:
+        INSTALL_NLP: "true"
+        INSTALL_AUDIO: "true"
+    environment:
+      # Ollama running on the host machine
+      LOCALGUIA_LLM_BASE_URL: http://host.docker.internal:11434/v1
+      LOCALGUIA_CORS_ORIGINS: '["http://localhost:3000"]'
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - ./data:/data
+      - whisper-models:/root/.cache/huggingface
+    ports:
+      - "8000:8000"
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        BACKEND_URL: http://backend:8000
+    depends_on:
+      - backend
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
+
+  # Optional: run Ollama in Docker instead of on the host.
+  # Then set LOCALGUIA_LLM_BASE_URL=http://ollama:11434/v1 above and `docker compose --profile ollama up`.
+  ollama:
+    image: ollama/ollama:latest
+    profiles: ["ollama"]
+    volumes:
+      - ollama:/root/.ollama
+    ports:
+      - "11434:11434"
+
+volumes:
+  whisper-models:
+  ollama:

@@ -1,0 +1,17 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+backend/.env
+backend/data/
+
+# Node
+node_modules/
+.next/
+frontend/.env*.local
+
+# App data (docker volume)
+data/

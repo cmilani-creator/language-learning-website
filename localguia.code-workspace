@@ -1,0 +1,68 @@
+{
+  "folders": [
+    { "name": "localguia (root)", "path": "." },
+    { "name": "backend (FastAPI)", "path": "backend" },
+    { "name": "frontend (Next.js)", "path": "frontend" }
+  ],
+  "settings": {
+    "python.defaultInterpreterPath": "${env:LOCALAPPDATA}\\LocalGuia\\venv\\Scripts\\python.exe",
+    "python.testing.pytestEnabled": true,
+    "python.testing.pytestArgs": ["tests"],
+    "python.analysis.extraPaths": ["${workspaceFolder:backend (FastAPI)}"],
+    "[python]": { "editor.defaultFormatter": "charliermarsh.ruff" },
+    "typescript.tsdk": "frontend/node_modules/typescript/lib",
+    "editor.formatOnSave": false,
+    "files.exclude": {
+      "**/__pycache__": true,
+      "**/.pytest_cache": true,
+      "**/.next": true
+    },
+    "search.exclude": {
+      "**/node_modules": true,
+      "**/data/media": true
+    }
+  },
+  "extensions": {
+    "recommendations": [
+      "ms-python.python",
+      "ms-python.vscode-pylance",
+      "charliermarsh.ruff",
+      "dbaeumer.vscode-eslint",
+      "bradlc.vscode-tailwindcss"
+    ]
+  },
+  "launch": {
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "name": "Backend: FastAPI (uvicorn)",
+        "type": "debugpy",
+        "request": "launch",
+        "module": "uvicorn",
+        "args": ["app.main:app", "--port", "8000"],
+        "cwd": "${workspaceFolder:backend (FastAPI)}",
+        "python": "${env:LOCALAPPDATA}\\LocalGuia\\venv\\Scripts\\python.exe",
+        "justMyCode": true
+      },
+      {
+        "name": "Frontend: Next.js dev",
+        "type": "node-terminal",
+        "request": "launch",
+        "command": "npm run dev",
+        "cwd": "${workspaceFolder:frontend (Next.js)}",
+        "env": { "NODE_OPTIONS": "--use-system-ca" }
+      },
+      {
+        "name": "Reset demo data (Dutch → English)",
+        "type": "debugpy",
+        "request": "launch",
+        "module": "app.demo.seed",
+        "cwd": "${workspaceFolder:backend (FastAPI)}",
+        "python": "${env:LOCALAPPDATA}\\LocalGuia\\venv\\Scripts\\python.exe"
+      }
+    ],
+    "compounds": [
+      { "name": "LocalGuia: backend + frontend", "configurations": ["Backend: FastAPI (uvicorn)", "Frontend: Next.js dev"] }
+    ]
+  }
+}
